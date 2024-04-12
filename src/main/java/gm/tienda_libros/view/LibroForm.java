@@ -43,6 +43,7 @@ public class LibroForm extends JFrame {
             }
         });
         modificarButton.addActionListener(e -> modificarLibro());
+        eliminarButton.addActionListener(e -> eliminarLibro());
     }
 
     private void iniciarForma(){
@@ -90,7 +91,8 @@ public class LibroForm extends JFrame {
         var libro = new Libro(null,nombreLibro,autor,precio,cant);
 
 
-       libroServicio.guardarLibro(libro);
+
+        libroServicio.guardarLibro(libro);
         mostrarMensaje("Se guardo el libro");
         cleanForm();
         listarLibros();
@@ -120,6 +122,36 @@ public class LibroForm extends JFrame {
             listarLibros();
         }
     }
+    private void eliminarLibro(){
+    // Solucion que hice yo
+    //        if(this.idTexto.getText().isEmpty()){
+    //            mostrarMensaje("Debe seleccionar un registro");
+    //        }else{
+    //            Integer idLibro = Integer.parseInt(idTexto.getText());
+    //            var nombreLibro = libroText.getText();
+    //            var autor = autorText.getText();
+    //            var precio = Double.parseDouble(precioText.getText());
+    //            var cant = Integer.parseInt(cantText.getText());
+    //            var libro = new Libro(idLibro,nombreLibro,autor,precio,cant);
+    //            libroServicio.eliminarLibro(libro);
+    //            mostrarMensaje("Se elimino el libro");
+    //            cleanForm();
+    //            listarLibros();
+    //        }
+        var fila = tablaLibros.getSelectedRow();
+        if(fila != -1){
+            String idLibro = tablaLibros.getModel().getValueAt(fila,0).toString();
+            var libro = new Libro();
+            libro.setIdLibro(Integer.parseInt(idLibro));
+            libroServicio.eliminarLibro(libro);
+            mostrarMensaje("Se elimino el libro");
+            cleanForm();
+            listarLibros();
+        }else{
+            mostrarMensaje("No se ha seleccionado ningún libro");
+        }
+
+    }
 
     private void cleanForm(){
         libroText.setText("");
@@ -137,11 +169,16 @@ public class LibroForm extends JFrame {
         idTexto = new JTextField("");
         idTexto.setVisible(false);
 
-        this.tablaModeloLibros = new DefaultTableModel(0,5);
+        this.tablaModeloLibros = new DefaultTableModel(0,5) {
+            @Override
+            public boolean isCellEditable(int fila, int columna){ return false; }
+        };
         String [] cabeceras = {"Id", "Libro", "Autor", "Precio", "Cantidad Disponible"};
         this.tablaModeloLibros.setColumnIdentifiers(cabeceras);
 
         this.tablaLibros = new JTable(tablaModeloLibros);
+        // Evitar que se seleccionen varios registros;
+        this.tablaLibros.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         listarLibros();
 
     }

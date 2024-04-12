@@ -24,15 +24,6 @@ public class Libro {
     Double precio;
     Integer cantidad;
 
-    public Libro(Integer idLibro, String nombreLibro, String autor, double precio, int cant)
-    {
-        this.idLibro = idLibro;
-        this.nombreLibro = nombreLibro;
-        this.autor = autor;
-        this.precio = precio;
-        this.cantidad = cant;
-    }
-
     public Integer getIdLibro() {
         return idLibro;
     }
